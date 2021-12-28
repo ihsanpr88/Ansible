@@ -4,5 +4,5 @@
  
   tasks:
  
-  - name: Hello World!
+  - name: testproject
     shell: echo "Hi! Tower is working."
