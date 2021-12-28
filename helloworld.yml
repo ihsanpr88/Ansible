@@ -1,10 +1,31 @@
 ---
-- name: Hello World!
+- name: Inventory!
   hosts: all
- 
+  gather_facts: true
+  vars:
+    lastpatchs: |
+      {%- set o=[] %}
+      {%- for i in play_hosts %}
+        {%- if o.append(hostvars[i].lastpatch) %}
+        {%- endif %}
+      {%- endfor %}
+      {{ o }}
+      
   tasks:
- 
-  - name: testproject
-    shell: uname -a
-    register: output
-  - debug: msg="{{output}}"
+  - name: get lastpatchs
+    shell: "echo $(rpm -qa kernel --last|head -1 |awk '{print $3,$4,$5}') \t $(hostname)"
+    register: lastpatchdate
+  - set_fact:
+      lastpatch: "{{ lastpatchdate.stdout }}"
+  - copy:
+      content: |
+        HOSTNAME;OSNAME;OSVERSION;KERNEL;CPU;MEMORY;LAST_PATCH_DATE
+        {% for host in hostvars %}
+        {% set vars = hostvars[host|string] %}
+        {{ vars.ansible_fqdn }};{{ vars.ansible_distribution }};{{ vars.ansible_distribution_version }};{{ vars.ansible_kernel }};{{ vars.ansible_processor_vcpus }};{{ (vars.ansible_memtotal_mb/1024)|round|int }};{{ vars.lastpatch }}
+        {% endfor %}
+      dest: /tmp/systems.csv
+      backup: yes
+    run_once: yes
+    delegate_to: localhost
+    
