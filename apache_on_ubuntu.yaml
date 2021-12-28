@@ -1,6 +1,6 @@
   ---
-  - name: Apache on ubuntu
-    hosts: all
+  name: Apache on ubuntu
+  hosts: all
     tasks:
       - name: install apache2
         apt: name=apache2 update_cache=yes state=latest
