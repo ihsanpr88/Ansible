@@ -1,12 +1,4 @@
-  ---
-- name: Hello World!
-  hosts: all
-
-  tasks:
-
-  - name: Hello World!
-    shell: echo "Hi! Tower is working."
-  ---
+---
 - name: Apache on ubuntu
   hosts: all
   tasks:
@@ -26,6 +18,6 @@
      notify:
        - restart apache2
 
-    handlers:
+  handlers:
     - name: restart apache2
       service: name=apache2 state=restarted
