@@ -1,6 +1,7 @@
 ---
 - name: Inventory!
   hosts: all
+  serial: 1
   gather_facts: true
   vars:
     lastpatchs: |
