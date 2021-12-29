@@ -1,6 +1,5 @@
 ---
-- name: Hello World!
-  hosts: all
+- name: Hello World! 
 
   tasks:
 
